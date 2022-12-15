@@ -175,7 +175,7 @@ def main():
     # Remove old init_ard script, if it exists
     if os.path.isfile(os.path.dirname(os.path.realpath(__file__))+'/init_ard'):
         os.remove(os.path.dirname(os.path.realpath(__file__))+'/init_ard')
-
+        
     # Get results
     result = dict()
     result = merge_two_dicts(get_remote_desktop_info(), get_remote_management_info())
