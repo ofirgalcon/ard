@@ -1,5 +1,5 @@
 {
     "name": "munkireport/ard",
-    "description": "Module for munkireport.",
+    "description": "Apple Remote Desktop module for munkireport.",
     "license": "MIT"
 }
