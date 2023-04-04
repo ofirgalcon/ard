@@ -7,7 +7,7 @@ class Ard_model extends \Model
     public function __construct($serial = '')
     {
         parent::__construct('id', 'ard'); //primary key, tablename
-        $this->rs['id'] = 0;
+        $this->rs['id'] = "";
         $this->rs['serial_number'] = $serial;
         $this->rs['text1'] = '';
         $this->rs['text2'] = '';
