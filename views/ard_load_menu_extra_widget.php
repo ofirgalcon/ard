@@ -1,12 +1,11 @@
 <div class="col-lg-4 col-md-6">
-    <div class="panel panel-default" id="ard_load_menu_extra-widget">
-        <div id="ard_load_menu_extra-widget" class="panel-heading" data-container="body">
-            <h3 class="panel-title"><i class="fa fa-binoculars"></i> 
-                <span data-i18n="ard.load_menu_extra"></span>
-                <list-link data-url="/show/listing/ard/ard"></list-link>
-            </h3>
+    <div class="card" id="ard_load_menu_extra-widget">
+        <div id="ard_load_menu_extra-widget" class="card-header" data-container="body">
+            <i class="fa fa-binoculars"></i>
+            <span data-i18n="ard.load_menu_extra"></span>
+            <a href="/show/listing/ard/ard" class="pull-right"><i class="fa fa-list"></i></a>
         </div>
-        <div class="panel-body text-center"></div>
+        <div class="card-body text-center"></div>
     </div><!-- /panel -->
 </div><!-- /col -->
 
@@ -19,7 +18,7 @@ $(document).on('appUpdate', function(e, lang) {
             return;
         }
 
-        var panel = $('#ard_load_menu_extra-widget div.panel-body'),
+        var panel = $('#ard_load_menu_extra-widget div.card-body'),
         baseUrl = appUrl + '/show/listing/ard/ard/';
         panel.empty();
         // Set blocks, disable if zero

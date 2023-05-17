@@ -1,12 +1,11 @@
 <div class="col-lg-4 col-md-6">
-    <div class="panel panel-default" id="ard_screensharing_request_permission-widget">
-        <div id="ard_screensharing_request_permission-widget" class="panel-heading" data-container="body">
-            <h3 class="panel-title"><i class="fa fa-clone"></i> 
-                <span data-i18n="ard.screensharing_request_permission"></span>
-                <list-link data-url="/show/listing/ard/ard"></list-link>
-            </h3>
+    <div class="card" id="ard_screensharing_request_permission-widget">
+        <div id="ard_screensharing_request_permission-widget" class="card-header" data-container="body">
+            <i class="fa fa-clone"></i>
+            <span data-i18n="ard.screensharing_request_permission"></span>
+            <a href="/show/listing/ard/ard" class="pull-right"><i class="fa fa-list"></i></a>
         </div>
-        <div class="panel-body text-center"></div>
+        <div class="card-body text-center"></div>
     </div><!-- /panel -->
 </div><!-- /col -->
 
@@ -19,7 +18,7 @@ $(document).on('appUpdate', function(e, lang) {
             return;
         }
 
-        var panel = $('#ard_screensharing_request_permission-widget div.panel-body'),
+        var panel = $('#ard_screensharing_request_permission-widget div.card-body'),
         baseUrl = appUrl + '/show/listing/ard/ard/';
         panel.empty();
         // Set blocks, disable if zero
