@@ -4,15 +4,15 @@
 	)
 )); ?>
 
-<div class="container">
+<div class="container-fluid">
     
-  <div class="row">
+  <div class="row pt-4">
     <?php $widget->view($this, 'ard_directory_login'); ?>
     <?php $widget->view($this, 'ard_allow_all_local_users'); ?>
     <?php $widget->view($this, 'ard_vnc_enabled'); ?>
   </div> <!-- /row -->
     
-  <div class="row">
+  <div class="row pt-4">
     <?php $widget->view($this, 'ard_screensharing_request_permission'); ?>
     <?php $widget->view($this, 'ard_load_menu_extra'); ?>
   </div> <!-- /row -->
