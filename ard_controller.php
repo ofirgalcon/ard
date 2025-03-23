@@ -197,6 +197,9 @@ class Ard_controller extends Module_controller
      **/
     public function get_data($serial_number = '')
     {
+        // Remove non-serial number characters
+        $serial_number = preg_replace("/[^A-Za-z0-9_\-]/", '', $serial_number);
+        
         $obj = new View();
 
         if (! $this->authorized()) {
@@ -204,9 +207,18 @@ class Ard_controller extends Module_controller
             return;
         }
 
-        $ard_factory = new Ard_factory($serial_number);
-        $ard = $ard_factory->getModel();
-        $obj->view('json', array('msg' => $ard->rs));
+        $sql = "SELECT *
+                FROM ard 
+                WHERE serial_number = '$serial_number'";
+        
+        $queryobj = new Ard_model();
+        $ard_data = $queryobj->query($sql);
+        
+        if (empty($ard_data)) {
+            $obj->view('json', array('msg' => array())); 
+        } else {
+            $obj->view('json', array('msg' => current($ard_data)));
+        }
     }
     
     /**
@@ -218,7 +230,7 @@ class Ard_controller extends Module_controller
     public function get_tab_data($serial_number = '')
     {
         // Remove non-serial number characters
-        $serial_number = preg_replace("/[^A-Za-z0-9_\-]]/", '', $serial_number);
+        $serial_number = preg_replace("/[^A-Za-z0-9_\-]/", '', $serial_number);
 
         $obj = new View();
 
