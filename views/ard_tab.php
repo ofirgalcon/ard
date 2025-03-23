@@ -1,5 +1,3 @@
-
-
 <div id="lister" style="font-size: large; float: right;">
     <a href="/show/listing/ard/ard" title="List">
         <i class="btn btn-default tab-btn fa fa-list"></i>
@@ -10,13 +8,14 @@
         <i class="btn btn-default tab-btn fa fa-th"></i>
     </a>
 </div>
-<h2 data-i18n="ard.ard"></h2>
+<h2><i class="fa fa-desktop"></i> <span data-i18n="ard.ard"></span></h2>
 <div id="ard-tab"></div>
 
 <div id="ard-msg" data-i18n="listing.loading" class="col-lg-12 text-center"></div>
 
 <script>
 $(document).on('appReady', function(){
+    // Handle ARD Tab data
     var $ardMsg = $('#ard-msg');
     var $ardTab = $('#ard-tab');
 
@@ -32,6 +31,7 @@ $(document).on('appReady', function(){
             var rows = '';
             var administratorsRows = '';
             var taskServersRows = '';
+            var textRows = {}; // Store text rows in an object keyed by text number
 
             $.each(data, function(i, d){
                 for (var prop in d) {
@@ -41,11 +41,37 @@ $(document).on('appReady', function(){
 
                     var value = d[prop];
                     var translatedProp = i18n.t('ard.' + prop);
+                    
+                    // Store text1-4 fields separately to add them at the end
+                    if (/^text([1-4])$/.test(prop)) {
+                        var textNum = prop.match(/^text([1-4])$/)[1]; // Extract the number
+                        textRows[textNum] = '<tr><th style="width: 165px;">' + translatedProp + '</th><td style="max-width: 500px;">' + value + '</td></tr>';
+                        continue; // Skip further processing of this property
+                    }
 
-                    if (['screensharing_request_permission', 'load_menu_extra', 'console_allows_remote', 'allow_all_local_users', 'directory_login'].includes(prop)) {
-                        rows += '<tr><th>' + translatedProp + '</th><td>' + i18n.t(value == "yes" || value == 1 ? 'yes' : 'no') + '</td></tr>';
+                    if (['screensharing_request_permission', 'AdminConsoleAllowsRemoteControl', 'console_allows_remote', 'allow_all_local_users', 'directory_login'].includes(prop)) {
+                        value = value == "yes" || value == 1 ? 1 : 0;
+
+                        // Special handling for remote control console fields
+                        if (prop === 'AdminConsoleAllowsRemoteControl' || prop === 'console_allows_remote') {
+                            translatedProp = i18n.t('ard.remote_control_enabled');
+                        }
+
+                        rows += '<tr><th>' + translatedProp + '</th><td>' + 
+                            (value == 1 ? 
+                                '<span class="label label-danger">' + i18n.t('yes') + '</span>' : 
+                                '<span class="label label-success">' + i18n.t('no') + '</span>') + 
+                            '</td></tr>';
+                    } else if (prop === 'load_menu_extra') {
+                        value = value == "yes" || value == 1 ? 1 : 0;
+                        rows += '<tr><th>' + translatedProp + '</th><td>' + i18n.t(value == 1 ? 'yes' : 'no') + '</td></tr>';
                     } else if (prop === 'vnc_enabled') {
-                        rows += '<tr><th>' + translatedProp + '</th><td>' + i18n.t(value == "yes" || value == 1 ? 'enabled' : 'disabled') + '</td></tr>';
+                        value = value == "yes" || value == 1 ? 1 : 0;
+                        rows += '<tr><th>' + translatedProp + '</th><td>' + 
+                            (value == 1 ? 
+                                '<span class="label label-danger">' + i18n.t('enabled') + '</span>' : 
+                                '<span class="label label-success">' + i18n.t('disabled') + '</span>') + 
+                            '</td></tr>';
                     } else if (prop === 'administrators') {
                         administratorsRows = buildAdministratorsTable(JSON.parse(value));
                     } else if (prop === 'task_servers') {
@@ -55,6 +81,13 @@ $(document).on('appReady', function(){
                     }
                 }
             });
+            
+            // Add text rows at the end in order
+            for (var i = 1; i <= 4; i++) {
+                if (textRows[i]) {
+                    rows += textRows[i];
+                }
+            }
 
             $ardTab.append(createTable(rows, 500));
 
@@ -72,6 +105,26 @@ $(document).on('appReady', function(){
                 $ardTab.append('<br>');
             }
         }
+    });
+
+    // Handle ARD Detail Widget data
+    // The displayArdData function is in ard.js
+
+    // Also add ARD data display functionality directly in tab if needed
+    $.getJSON(appUrl + '/module/ard/get_data/' + serialNumber, function(data) {
+        $.each(data, function(index, item) {
+            if (/^text[\d]$/.test(index)) {
+                // If the ard-data table exists in the tab, populate it
+                if ($('#ard-tab #ard-data table').length) {
+                    $('#ard-tab #ard-data table')
+                        .append($('<tr>')
+                            .append($('<th>')
+                                .text(index.replace("text", "ARD " + i18n.t("text") + " ")))
+                            .append($('<td>')
+                                .text(item)));
+                }
+            }
+        });
     });
 
     function createTable(rows, width) {
